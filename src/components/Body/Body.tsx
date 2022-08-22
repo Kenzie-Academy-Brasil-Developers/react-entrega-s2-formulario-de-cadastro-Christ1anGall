@@ -8,7 +8,7 @@ import api from "../../api/api";
 import { useState } from "react";
 
 const Body = () => {
-  interface Itechs {
+  interface Itech {
     id: string;
     title: string;
     status: string;
@@ -16,7 +16,7 @@ const Body = () => {
 
   const { user } = useContext(UserContext);
   const { isModalON } = useContext(ModalProvider);
-  const [techs, setTechs] = useState([]);
+  const [techs, setTechs] = useState<Itech[]>([]);
 
   useEffect(() => {
     api.get(`/users/${user.id}`).then((res) => {
@@ -34,7 +34,7 @@ const Body = () => {
     <BodyContainer>
       <ButtonCreateTechs />
       <ul>
-        {techs.map((tech: Itechs) => {
+        {techs.map((tech: Itech) => {
           return (
             <ListTechs
               key={tech.id}
