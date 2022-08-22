@@ -2,7 +2,7 @@ import { UserContext } from "../../context/UserProvider";
 import ButtonCreateTechs from "../ButtonCreateTechs";
 import ListTechs from "../ListTechs/ListTechs";
 import BodyContainer from "./style";
-import { Dispatch, SetStateAction, useContext, useEffect } from "react";
+import { useContext, useEffect } from "react";
 import { ModalProvider } from "../../context/ModalProvider";
 import api from "../../api/api";
 import { useState } from "react";
