@@ -69,13 +69,13 @@ const Provider = ({ children }: IProviderProps) => {
 
   useEffect(() => {
     token
-      ? api.get("/profile").then((res) => setUser(res.data))
+      ? api.get("profile").then((res) => setUser(res.data))
       : navigate("../Login", { replace: true });
   }, [token]);
 
   const requestUser = async (data: IuserData) => {
     await api
-      .post("/sessions", data)
+      .post("sessions", data)
       .then((res) => {
         setUser(res.data.user);
         const notify = () =>
@@ -110,7 +110,7 @@ const Provider = ({ children }: IProviderProps) => {
     };
 
     api
-      .post("/users", dataSend)
+      .post("users", dataSend)
       .then((res) => {
         const notify = () =>
           toast.success("Conta criada com sucesso!", {

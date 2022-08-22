@@ -1,23 +1,54 @@
-import { createContext, useState } from "react";
+import {
+  createContext,
+  Dispatch,
+  ReactNode,
+  SetStateAction,
+  useState,
+} from "react";
 import { useForm } from "react-hook-form";
 import api from "../api/api";
 import ModalContainer from "../components/Modal/style";
 import { toast } from "react-toastify";
 
-export const ModalProvider = createContext({});
+interface IModalProps {
+  children: ReactNode;
+}
 
-const ModalContext = ({ children }) => {
+interface Itechs {
+  title: string;
+  status: string;
+}
+
+interface ImodalProvider {
+  isModalON: boolean;
+  setModal: Dispatch<SetStateAction<boolean>>;
+  Modal: () => JSX.Element;
+  setType: Dispatch<SetStateAction<string>>;
+  setTitle: Dispatch<SetStateAction<string>>;
+  setId: Dispatch<SetStateAction<string>>;
+  setTitleEdit: Dispatch<SetStateAction<string>>;
+}
+
+export const ModalProvider = createContext<ImodalProvider>(
+  {} as ImodalProvider
+);
+
+const ModalContext = ({ children }: IModalProps) => {
   const [type, setType] = useState("create");
-  const [isModalON, setModal] = useState(false);
+  const [isModalON, setModal] = useState<boolean>(false);
   const [tittle, setTitle] = useState("Cadastrar Tecnologia");
   const [id, setId] = useState("");
   const [titleEdit, setTitleEdit] = useState("");
-  const { register, handleSubmit } = useForm();
+  const { register, handleSubmit } = useForm<Itechs>();
 
   const Modal = () => {
-    const createTech = (data) => {
+    function closeModal() {
+      setModal(!isModalON);
+    }
+
+    const createTech = (data: Itechs) => {
       api
-        .post("/users/techs", data)
+        .post("users/techs", data)
         .then(() => {
           const notify = () =>
             toast.success(`tech ${data.title} Criada com Sucesso!`, {
@@ -35,10 +66,10 @@ const ModalContext = ({ children }) => {
         });
     };
 
-    const editTech = (data) => {
+    const editTech = (data: Itechs) => {
       api
-        .put(`/users/techs/${id}`, { status: data.status })
-        .then(setModal(!isModalON))
+        .put(`users/techs/${id}`, { status: data.status })
+        .then(closeModal)
         .catch((err) => {
           console.error(err, "ERROR");
         });
@@ -46,8 +77,8 @@ const ModalContext = ({ children }) => {
 
     const deleteTech = () => {
       api
-        .delete(`/users/techs/${id}`)
-        .then(setModal(!isModalON))
+        .delete(`users/techs/${id}`)
+        .then(closeModal)
         .catch((err) => {
           console.error(err, "ERROR");
         });
@@ -80,7 +111,7 @@ const ModalContext = ({ children }) => {
               )}
 
               <label>Status</label>
-              <select name="Status" id="Status" {...register("status")}>
+              <select id="Status" {...register("status")}>
                 <option value="Iniciante">Iniciante </option>
                 <option value="Intermediário">Intermediário </option>
                 <option value="Avançado">Avançado </option>
