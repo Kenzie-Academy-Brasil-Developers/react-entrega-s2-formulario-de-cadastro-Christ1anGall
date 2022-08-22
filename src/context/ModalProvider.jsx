@@ -1,9 +1,9 @@
-import { createContext, useContext, useState } from "react";
+import { createContext, useState } from "react";
 import { useForm } from "react-hook-form";
 import api from "../api/api";
 import ModalContainer from "../components/Modal/style";
 import { toast } from "react-toastify";
-import { UserContext } from "./UserProvider";
+
 export const ModalProvider = createContext({});
 
 const ModalContext = ({ children }) => {
@@ -31,7 +31,7 @@ const ModalContext = ({ children }) => {
               theme: "dark",
             });
           notify();
-          console.log(err);
+          console.error(err);
         });
     };
 
@@ -40,7 +40,7 @@ const ModalContext = ({ children }) => {
         .put(`/users/techs/${id}`, { status: data.status })
         .then(setModal(!isModalON))
         .catch((err) => {
-          console.log(err, "ERROR");
+          console.error(err, "ERROR");
         });
     };
 
@@ -49,7 +49,7 @@ const ModalContext = ({ children }) => {
         .delete(`/users/techs/${id}`)
         .then(setModal(!isModalON))
         .catch((err) => {
-          console.log(err, "ERROR");
+          console.error(err, "ERROR");
         });
     };
 

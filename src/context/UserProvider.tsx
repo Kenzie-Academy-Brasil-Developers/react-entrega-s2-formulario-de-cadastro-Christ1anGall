@@ -1,17 +1,71 @@
-import { createContext, useEffect, useState } from "react";
+import {
+  createContext,
+  Dispatch,
+  ReactNode,
+  SetStateAction,
+  useEffect,
+  useState,
+} from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import api from "../api/api";
 
-export const UserContext = createContext({});
+interface IProviderProps {
+  children: ReactNode;
+}
 
-const Provider = ({ children }) => {
+export interface IuserData {
+  email: string;
+  password: string;
+  name?: string;
+  bio?: string;
+  contact?: string;
+  course_module?: string;
+}
+
+export interface IresponseUserData {
+  avatar_url?: string | null;
+  bio?: string;
+  contact?: string;
+  course_module?: string;
+  created_at?: string;
+  email?: string;
+  id?: string;
+  name?: string;
+  techs?: IuserTechs[];
+  updated_at?: string;
+  works?: IuserWorks[];
+}
+
+interface IuserTechs {
+  created_at: string;
+  id: string;
+  status: string;
+  title: string;
+  updated_at: string;
+}
+
+interface IuserWorks {
+  title: string;
+  description: string;
+  deploy_url: string;
+}
+
+export interface IuserContext {
+  user: IresponseUserData;
+  requestUser: (data: IuserData) => void;
+  createUser: (data: IuserData) => void;
+  setUser: Dispatch<SetStateAction<{}>>;
+}
+
+export const UserContext = createContext<IuserContext>({} as IuserContext);
+
+const Provider = ({ children }: IProviderProps) => {
   let navigate = useNavigate();
 
   const [user, setUser] = useState({});
 
   const token = localStorage.getItem("@TOKEN");
-  api.defaults.headers.authorization = `Bearer ${token}`;
 
   useEffect(() => {
     token
@@ -19,11 +73,10 @@ const Provider = ({ children }) => {
       : navigate("../Login", { replace: true });
   }, [token]);
 
-  const requestUser = async (data) => {
+  const requestUser = async (data: IuserData) => {
     await api
       .post("/sessions", data)
       .then((res) => {
-        console.log(res.data.user);
         setUser(res.data.user);
         const notify = () =>
           toast.success(`Bem vindo ${res.data.user.name}!`, {
@@ -44,7 +97,7 @@ const Provider = ({ children }) => {
       });
   };
 
-  const createUser = async (data) => {
+  const createUser = async (data: IuserData) => {
     const { email, password, name, bio, contact, course_module } = data;
 
     const dataSend = {
