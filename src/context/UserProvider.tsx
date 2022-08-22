@@ -17,6 +17,7 @@ interface IProviderProps {
 export interface IuserData {
   email: string;
   password: string;
+  passwordConfirm?: string;
   name?: string;
   bio?: string;
   contact?: string;

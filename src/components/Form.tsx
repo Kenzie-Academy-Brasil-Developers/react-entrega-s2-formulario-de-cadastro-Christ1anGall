@@ -2,7 +2,7 @@ import { schemaRegister, schemaLogin } from "./schema/schema";
 import { Container, FormMain, LinkForm } from "./style";
 import { useContext, useEffect, useState } from "react";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { UserContext } from "../context/UserProvider";
+import { IuserData, UserContext } from "../context/UserProvider";
 import "react-toastify/dist/ReactToastify.css";
 import { BiErrorCircle } from "react-icons/bi";
 import { useForm } from "react-hook-form";
@@ -17,7 +17,7 @@ export const FormLogin = () => {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm({
+  } = useForm<IuserData>({
     resolver: yupResolver(schemaLogin),
   });
 
@@ -73,7 +73,7 @@ export const FormRegister = () => {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm({
+  } = useForm<IuserData>({
     resolver: yupResolver(schemaRegister),
   });
 
@@ -132,11 +132,7 @@ export const FormRegister = () => {
       </div>
 
       <label htmlFor="course_module">Selecionar módulo</label>
-      <select
-        name="course_module"
-        id="course_module"
-        {...register("course_module")}
-      >
+      <select id="course_module" {...register("course_module")}>
         <option value="Primeiro Módulo (Introdução ao Frontend)">
           Primeiro Módulo
         </option>
