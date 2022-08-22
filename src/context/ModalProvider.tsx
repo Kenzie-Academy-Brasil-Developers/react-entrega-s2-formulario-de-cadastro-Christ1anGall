@@ -36,7 +36,7 @@ export const ModalProvider = createContext<ImodalProvider>(
 const ModalContext = ({ children }: IModalProps) => {
   const [type, setType] = useState("create");
   const [isModalON, setModal] = useState<boolean>(false);
-  const [tittle, setTitle] = useState("Cadastrar Tecnologia");
+  const [tittle, setTitle] = useState<string>("Cadastrar Tecnologia");
   const [id, setId] = useState("");
   const [titleEdit, setTitleEdit] = useState("");
   const { register, handleSubmit } = useForm<Itechs>();

@@ -7,13 +7,13 @@ import { ModalProvider } from "../../context/ModalProvider";
 import api from "../../api/api";
 import { useState } from "react";
 
-const Body = () => {
-  interface Itech {
-    id: string;
-    title: string;
-    status: string;
-  }
+export interface Itech {
+  id: string;
+  title: string;
+  status: string;
+}
 
+const Body = () => {
   const { user } = useContext(UserContext);
   const { isModalON } = useContext(ModalProvider);
   const [techs, setTechs] = useState<Itech[]>([]);

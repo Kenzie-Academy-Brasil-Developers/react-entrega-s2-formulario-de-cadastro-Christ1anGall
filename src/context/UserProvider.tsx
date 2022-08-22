@@ -18,6 +18,7 @@ export interface IuserData {
   email: string;
   password: string;
   passwordConfirm?: string;
+  showPassworde?: boolean;
   name?: string;
   bio?: string;
   contact?: string;
