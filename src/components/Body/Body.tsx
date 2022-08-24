@@ -1,4 +1,4 @@
-import { UserContext } from "../../context/UserProvider";
+import { IresponseUserData, UserContext } from "../../context/UserProvider";
 import ButtonCreateTechs from "../ButtonCreateTechs";
 import ListTechs from "../ListTechs/ListTechs";
 import BodyContainer from "./style";
@@ -19,13 +19,13 @@ const Body = () => {
   const [techs, setTechs] = useState<Itech[]>([]);
 
   useEffect(() => {
-    api.get(`/users/${user.id}`).then((res) => {
-      setTechs(res.data.techs);
+    api.get<IresponseUserData>(`/users/${user.id}`).then(({ data }) => {
+      setTechs(data.techs);
     });
 
     return () => {
-      api.get(`/users/${user.id}`).then((res) => {
-        setTechs(res.data.techs);
+      api.get<IresponseUserData>(`/users/${user.id}`).then(({ data }) => {
+        setTechs(data.techs);
       });
     };
   }, [isModalON, user]);

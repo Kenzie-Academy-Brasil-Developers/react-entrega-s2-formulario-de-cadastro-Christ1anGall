@@ -26,17 +26,17 @@ export interface IuserData {
 }
 
 export interface IresponseUserData {
-  avatar_url?: string | null;
-  bio?: string;
-  contact?: string;
-  course_module?: string;
-  created_at?: string;
-  email?: string;
-  id?: string;
-  name?: string;
-  techs?: IuserTechs[];
-  updated_at?: string;
-  works?: IuserWorks[];
+  id: string;
+  avatar_url: string | null;
+  bio: string | undefined;
+  contact: string | undefined;
+  course_module: string | undefined;
+  created_at: string;
+  email: string;
+  name: string;
+  techs: IuserTechs[];
+  updated_at: string;
+  works: IuserWorks[];
 }
 
 interface IuserTechs {
@@ -57,7 +57,12 @@ export interface IuserContext {
   user: IresponseUserData;
   requestUser: (data: IuserData) => void;
   createUser: (data: IuserData) => void;
-  setUser: Dispatch<SetStateAction<{}>>;
+  setUser: Dispatch<SetStateAction<IresponseUserData>>;
+}
+
+interface IresponseUser {
+  token: string;
+  user: IresponseUserData;
 }
 
 export const UserContext = createContext<IuserContext>({} as IuserContext);
@@ -65,27 +70,27 @@ export const UserContext = createContext<IuserContext>({} as IuserContext);
 const Provider = ({ children }: IProviderProps) => {
   let navigate = useNavigate();
 
-  const [user, setUser] = useState({});
+  const [user, setUser] = useState<IresponseUserData>({} as IresponseUserData);
 
   const token = localStorage.getItem("@TOKEN");
 
   useEffect(() => {
     token
-      ? api.get("profile").then((res) => setUser(res.data))
+      ? api.get<IresponseUserData>("profile").then(({ data }) => setUser(data))
       : navigate("../Login", { replace: true });
-  }, [token]);
+  }, [navigate, token]);
 
   const requestUser = async (data: IuserData) => {
     await api
-      .post("sessions", data)
-      .then((res) => {
-        setUser(res.data.user);
+      .post<IresponseUser>("sessions", data)
+      .then(({ data }) => {
+        setUser(data.user);
         const notify = () =>
-          toast.success(`Bem vindo ${res.data.user.name}!`, {
+          toast.success(`Bem vindo ${data.user.name}!`, {
             theme: "dark",
           });
-        localStorage.setItem("@TOKEN", res.data.token);
-        localStorage.setItem("@USERID", res.data.user.id);
+        localStorage.setItem("@TOKEN", data.token);
+        localStorage.setItem("@USERID", data.user.id);
         notify();
         navigate("../Dashboard", { replace: true });
       })
@@ -112,13 +117,13 @@ const Provider = ({ children }: IProviderProps) => {
     };
 
     api
-      .post("users", dataSend)
-      .then((res) => {
+      .post<IresponseUser>("users", dataSend)
+      .then(({ data }) => {
         const notify = () =>
           toast.success("Conta criada com sucesso!", {
             theme: "dark",
           });
-        localStorage.setItem("@USERID", res.data.user.id);
+        localStorage.setItem("@USERID", data.user.id);
         notify();
         navigate("../login", { replace: true });
       })
