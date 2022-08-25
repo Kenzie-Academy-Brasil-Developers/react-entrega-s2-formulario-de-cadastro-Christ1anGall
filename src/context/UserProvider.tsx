@@ -78,7 +78,7 @@ const Provider = ({ children }: IProviderProps) => {
     token
       ? api.get<IresponseUserData>("profile").then(({ data }) => setUser(data))
       : navigate("../Login", { replace: true });
-  }, [navigate, token]);
+  }, [token]);
 
   const requestUser = async (data: IuserData) => {
     await api
